@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - luxury-network
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: luxury_sales-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - luxury-network
+
+  ms-usuario:
+    build: ./ms-usuario
+    container_name: luxury_sales-ms-usuario
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - luxury-network
+
+  ms-producto:
+    build: ./ms-producto
+    container_name: luxury_sales-ms-producto
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - luxury-network
+
+  ms-ventas:
+    build: ./ms-ventas
+    container_name: luxury_sales-ms-ventas
+    ports:
+      - "8085:8085"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+    networks:
+      - luxury-network
+
+networks:
+  luxury-network:
+    driver: bridge
